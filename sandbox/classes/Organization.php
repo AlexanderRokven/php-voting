@@ -14,34 +14,25 @@ class Organization
         //Check if the organization already exists in the database
         $sql = "SELECT *
                 FROM organization
-                WHERE org = ?
+                WHERE org = '$organization'
                 LIMIT 1";
-        if(!$stmt = $db->prepare($sql)) {
-            echo $stmt->error;
-        } else {
-            $stmt->bind_param("s", $organization);
-            $stmt->execute();
-            $result = $stmt->get_result();
-        }
+        
+        $result = $db->query($sql);
 
-        if($result->num_rows > 0) {
+        if($result->fetchArray() > 0) {
             echo "<div class='alert alert-danger'>Sorry the organization you are trying to insert already exists in the database.</div>";
         } else {
+            
             //Successfully inserted
-            $sql = "INSERT INTO organization(org)VALUES(?)";
-            if(!$stmt = $db->prepare($sql)) {
-                echo $stmt->error;
-            } else {
-                $stmt->bind_param("s", $organization);
-            }
+            $sql = "INSERT INTO organization(org)VALUES('$organization')";
 
-            if($stmt->execute()) {
+            if($db->query($sql)){
                 echo "<div class='alert alert-success'>Organization was inserted successfully.</div>";
             }
-            $stmt->free_result();
+            //$insertResult->reset();
         }
-        $result->free();
-        return $stmt;
+        //$result->reset();
+        //return $result;
     }
 
     public function READ_ORG() {
@@ -52,7 +43,7 @@ class Organization
             echo $stmt->error;
         } else {
             $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
         return $result;
     }
@@ -62,16 +53,14 @@ class Organization
 
         $sql = "SELECT *
                 FROM organization
-                WHERE id = ?
+                WHERE id = '$org_id'
                 LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("i", $org_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
-        $stmt->free_result();
+        $stmt->reset();
         return $result;
     }
 
@@ -79,19 +68,17 @@ class Organization
         global $db;
 
         $sql = "UPDATE organization
-                SET org = ?
-                WHERE id = ?
+                SET org = '$org'
+                WHERE id = '$org_id'
                 LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
-        } else {
-            $stmt->bind_param("si", $org, $org_id);
         }
 
-        if($stmt->execute()) {
+        if($db->query($sql)) {
             echo "<div class='alert alert-success'>Update successful <a href='http://localhost/VotingSystem/sandbox/add_org.php'><span class='glyphicon glyphicon-backward'></span> </a></div>";
         }
-        $stmt->free_result();
+        $stmt->reset();
         return $stmt;
     }
 
@@ -100,19 +87,19 @@ class Organization
 
         //Delete organization
         $sql = "DELETE FROM organization
-                WHERE id = ?
+                WHERE id = '$org_id'
                 LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("i", $org_id);
+            $result = $db->query($sql);
         }
 
-        if($stmt->execute()) {
+        if($result) {
             header("location: http://localhost/VotingSystem/sandbox/add_org.php");
             exit();
         }
-        $stmt->free_result();
-        return $stmt;
+        $result->reset();
+        return $result;
     }
 }

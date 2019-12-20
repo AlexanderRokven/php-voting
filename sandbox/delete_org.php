@@ -68,7 +68,7 @@ require("classes/Organization.php");
                 <?php
                 if(isset($_GET['id'])) {
                     $org_id = trim($_GET['id']);
-
+                    var_dump($org_id);
                     echo "<div class='alert alert-danger'>Are you sure you want to delete selected organization? <a href='http://localhost/VotingSystem/sandbox/delete_org.php?del_id=$org_id'>Yes</a> | <a href='http://localhost/VotingSystem/sandbox/add_org.php'>No</a></div>";
                 }
 

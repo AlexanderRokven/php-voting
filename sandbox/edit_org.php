@@ -86,7 +86,7 @@ require("classes/Organization.php");
 
                 <?php if($rtnEditOrg) { ?>
                 <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>" role="form">
-                    <?php while($rowEditOrg = $rtnEditOrg->fetch_assoc()) { ?>
+                    <?php while($rowEditOrg = $rtnEditOrg->fetchArray()) { ?>
                     <div class="form-group-sm">
                         <label for="organization">Organization</label>
                         <input required type="text" name="organization" value="<?php echo $rowEditOrg['org']; ?>" class="form-control">
@@ -97,7 +97,7 @@ require("classes/Organization.php");
                     </div>
                     <?php } //End while ?>
                 </form>
-                <?php $rtnEditOrg->free(); ?>
+                <?php $rtnEditOrg->reset(); ?>
                 <?php } //End if ?>
             </div>
         </div>

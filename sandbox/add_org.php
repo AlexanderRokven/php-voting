@@ -99,15 +99,15 @@ require("classes/Organization.php");
                         <th><span class="glyphicon glyphicon-edit"></span></th>
                         <th><span class="glyphicon glyphicon-remove"></span></th>
                     </tr>
-                    <?php while($rowOrg = $rtnReadOrg->fetch_assoc()) { ?>
+                    <?php while($row = $rtnReadOrg->fetchArray()) { ?>
                     <tr>
-                        <td><?php echo $rowOrg['org']; ?></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/edit_org.php?id=<?php echo $rowOrg['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/delete_org.php?id=<?php echo $rowOrg['id']; ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
+                        <td><?php echo $row['org']; ?></td>
+                        <td><a href="http://localhost/VotingSystem/sandbox/edit_org.php?id=<?php echo $row['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a></td>
+                        <td><a href="http://localhost/VotingSystem/sandbox/delete_org.php?id=<?php echo $row['id']; ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
                     </tr>
                     <?php } //End while ?>
                 </table>
-                <?php $rtnReadOrg->free(); ?>
+                <?php $rtnReadOrg->reset(); ?>
                 <?php } //End if ?>
             </div>
         </div>
