@@ -40,7 +40,7 @@ class Admin_Login
 
         if($error_msg) {
             $_SESSION['ERROR_MSG_ARR'] = $error_msg_array;
-            header("location: http://localhost/VotingSystem/sandbox/index.php");
+            header("location: http://localhost/VotingSystem/admin/index.php");
             exit();
         }
 
@@ -68,7 +68,7 @@ class Admin_Login
             //Create session
             session_regenerate_id();
             session_write_close();    
-            header("location: http://localhost/VotingSystem/sandbox/admin_page.php");
+            header("location: http://localhost/VotingSystem/admin/admin_page.php");
 
         } else {
             //Login failed
@@ -77,7 +77,7 @@ class Admin_Login
 
             if($error_msg) {
                 $_SESSION['ERROR_MSG_ARR'] = $error_msg_array;
-                header("location: http://localhost/VotingSystem/sandbox/index.php");
+                header("location: http://localhost/VotingSystem/admin/index.php");
                 exit();
             }
             $stmt->free_result();

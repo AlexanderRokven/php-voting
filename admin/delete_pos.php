@@ -66,7 +66,7 @@ require("classes/Position.php");
                 if(isset($_GET['id'])) {
                     $pos_id = trim($_GET['id']);
 
-                    echo "<div class='alert alert-danger'>Are you sure you want to delete selected position? <a href='http://localhost/VotingSystem/sandbox/delete_pos.php?del_id=$pos_id'>Yes</a> | <a href='http://localhost/VotingSystem/sandbox/add_pos.php'>No</a></div>";
+                    echo "<div class='alert alert-danger'>Are you sure you want to delete selected position? <a href='http://localhost/VotingSystem/admin/delete_pos.php?del_id=$pos_id'>Yes</a> | <a href='http://localhost/VotingSystem/admin/add_pos.php'>No</a></div>";
                 }
 
 

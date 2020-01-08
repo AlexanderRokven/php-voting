@@ -89,7 +89,7 @@ class Nominees
             $stmt->bind_param("ssssssi", $org, $pos, $name, $course, $year, $stud_id, $nom_id);
         }
         if($stmt->execute()) {
-            echo "<div class='alert alert-success'>Update successful <a href='http://localhost/VotingSystem/sandbox/add_nominees.php'><span class='glyphicon glyphicon-backward'></span> </a></div>";
+            echo "<div class='alert alert-success'>Update successful <a href='http://localhost/VotingSystem/admin/add_nominees.php'><span class='glyphicon glyphicon-backward'></span> </a></div>";
         }
         $stmt->free_result();
         return $stmt;
@@ -107,7 +107,7 @@ class Nominees
             $stmt->bind_param("i", $nom_id);
         }
         if($stmt->execute()) {
-            header("location: http://localhost/VotingSystem/sandbox/add_nominees.php");
+            header("location: http://localhost/VotingSystem/admin/add_nominees.php");
             exit();
         }
         $stmt->free_result();

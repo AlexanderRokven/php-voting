@@ -76,7 +76,7 @@ class Organization
         }
 
         if($db->query($sql)) {
-            echo "<div class='alert alert-success'>Update successful <a href='http://localhost/VotingSystem/sandbox/add_org.php'><span class='glyphicon glyphicon-backward'></span> </a></div>";
+            echo "<div class='alert alert-success'>Update successful <a href='http://localhost/VotingSystem/admin/add_org.php'><span class='glyphicon glyphicon-backward'></span> </a></div>";
         }
         $stmt->reset();
         return $stmt;
@@ -96,7 +96,7 @@ class Organization
         }
 
         if($result) {
-            header("location: http://localhost/VotingSystem/sandbox/add_org.php");
+            header("location: http://localhost/VotingSystem/admin/add_org.php");
             exit();
         }
         $result->reset();

@@ -187,8 +187,8 @@ require("classes/Nominees.php");
                         <td><?php echo $rowNom['name']; ?></td>
                         <td><?php echo $rowNom['course'] . "-" . $rowNom['year']; ?></td>
                         <td><?php echo $rowNom['stud_id']; ?></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/edit_nominee.php?id=<?php echo $rowNom['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/delete_nominee.php?id=<?php echo $rowNom['id']; ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
+                        <td><a href="http://localhost/VotingSystem/admin/edit_nominee.php?id=<?php echo $rowNom['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a></td>
+                        <td><a href="http://localhost/VotingSystem/admin/delete_nominee.php?id=<?php echo $rowNom['id']; ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
                     </tr>
                     <?php } //End while ?>
                 </table>

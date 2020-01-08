@@ -6,8 +6,8 @@ require("process/auth.php");
 //Include database connection
 require("../config/db.php");
 
-//Include class Organization
-require("classes/Organization.php");
+//Include class Voters
+require("classes/Voters.php");
 
 ?>
 <!DOCTYPE HTML>
@@ -39,10 +39,10 @@ require("classes/Organization.php");
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="admin_page.php"><span class="glyphicon glyphicon-home"></span></a></li>
-                <li class="active"><a href="add_org.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Organization</a></li>
+                <li><a href="add_org.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Organization</a></li>
                 <li><a href="add_pos.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Position</a></li>
                 <li><a href="add_nominees.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Nominees</a></li>
-                <li><a href="add_voters.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Voters</a></li>
+                <li class="active"><a href="add_voters.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Voters</a></li>
                 <li><a href="vote_result.php"><span class="glyphicon glyphicon-plus-sign"></span>Vote Result</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> <span class="caret"></span></a>
@@ -60,24 +60,56 @@ require("classes/Organization.php");
 
 
 
-
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <h4>Add Organization</h4><hr>
             <?php
             if(isset($_POST['submit'])) {
+                $name       = trim($_POST['name']);
+                $course     = trim($_POST['course']);
+                $year       = trim($_POST['year']);
+                $stud_id    = trim($_POST['stud_id']);
 
-                $organization = trim($_POST['organization']);
-
-                $insertOrg = new Organization();
-                $rtnInsertOrg = $insertOrg->INSERT_ORG($organization);
+                $insertVoter = new Voters();
+                $rtnInsertVoter = $insertVoter->INSERT_VOTER($name, $course, $year, $stud_id);
             }
             ?>
+            <h4>Add Voters</h4><hr>
             <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>" role="form">
                 <div class="form-group-sm">
-                    <label for="organization">Organization</label>
-                    <input required type="text" name="organization" class="form-control">
+                    <label for="name">Name</label>
+                    <input required type="text" name="name" class="form-control" placeholder="LName, FName MI.">
+                </div>
+                <div class="form-group-sm">
+                    <label for="course">Course</label>
+                    <select required name="course" class="form-control">
+                        <option value="">*****Select Course*****</option>
+                        <option value="BSIT">BSIT</option>
+                        <option value="COE">COE</option>
+                        <option value="BEE">BEE</option>
+                        <option value="BSE">BSE</option>
+                        <option value="BSA">BSA</option>
+                        <option value="BSF">BSF</option>
+                        <option value="BHRM">BHRM</option>
+                        <option value="BSHT">BSHT</option>
+                        <option value="CRIMINOLOGY">CRIMINOLOGY</option>
+                        <option value="MIDWIFERY">MIDWIFERY</option>
+                    </select>
+                </div>
+                <div class="form-group-sm">
+                    <label for="year">Year</label>
+                    <select required name="year" class="form-control">
+                        <option value="">*****Select Year*****</option>
+                        <option value="I">I</option>
+                        <option value="II">II</option>
+                        <option value="III">III</option>
+                        <option value="IV">IV</option>
+                        <option value="V">V</option>
+                    </select>
+                </div>
+                <div class="form-group-sm">
+                    <label for="stud_id">Student ID No.</label>
+                    <input required type="text" name="stud_id" class="form-control">
                 </div><hr>
                 <div class="form-group-sm">
                     <input type="submit" name="submit" value="Submit" class="btn btn-info">
@@ -85,29 +117,33 @@ require("classes/Organization.php");
             </form>
         </div>
 
+        <?php
+        $readVoters = new Voters();
+        $rtnReadVoters = $readVoters->READ_VOTERS();
+        ?>
         <div class="col-md-8">
             <h4>List of Organizations</h4><hr>
-            <?php
-            $readOrg = new Organization();
-            $rtnReadOrg = $readOrg->READ_ORG();
-            ?>
             <div class="table-responsive">
-                <?php if($rtnReadOrg) { ?>
+                <?php if($rtnReadVoters) { ?>
                 <table class="table table-bordered table-condensed table-striped">
                     <tr>
-                        <th>Organization</th>
+                        <th>Name</th>
+                        <th>Course/Year</th>
+                        <th>Student ID</th>
                         <th><span class="glyphicon glyphicon-edit"></span></th>
                         <th><span class="glyphicon glyphicon-remove"></span></th>
                     </tr>
-                    <?php while($row = $rtnReadOrg->fetchArray()) { ?>
+                    <?php while($rowVoter = $rtnReadVoters->fetch_assoc()) { ?>
                     <tr>
-                        <td><?php echo $row['org']; ?></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/edit_org.php?id=<?php echo $row['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/delete_org.php?id=<?php echo $row['id']; ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
+                        <td><?php echo $rowVoter['name']; ?></td>
+                        <td><?php echo $rowVoter['course'] . "-" . $rowVoter['year']; ?></td>
+                        <td><?php echo $rowVoter['stud_id']; ?></td>
+                        <td><a href="http://localhost/VotingSystem/admin/edit_voter.php?id=<?php echo $rowVoter['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a></td>
+                        <td><a href="http://localhost/VotingSystem/admin/delete_voter.php?id=<?php echo $rowVoter['id']; ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
                     </tr>
                     <?php } //End while ?>
                 </table>
-                <?php $rtnReadOrg->reset(); ?>
+                    <?php $rtnReadVoters->free(); ?>
                 <?php } //End if ?>
             </div>
         </div>
@@ -136,6 +172,3 @@ require("classes/Organization.php");
 
 </body>
 </html>
-<?php
-//Close database connection
-$db->close();

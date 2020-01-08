@@ -12,6 +12,9 @@ require("classes/Organization.php");
 //Include class Position
 require("classes/Position.php");
 
+//Include class Nominees
+require("classes/Nominees.php");
+
 ?>
 <!DOCTYPE HTML>
 <html lang="en-US">
@@ -43,10 +46,10 @@ require("classes/Position.php");
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="admin_page.php"><span class="glyphicon glyphicon-home"></span></a></li>
                 <li><a href="add_org.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Organization</a></li>
-                <li class="active"><a href="add_pos.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Position</a></li>
+                <li><a href="add_pos.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Position</a></li>
                 <li><a href="add_nominees.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Nominees</a></li>
                 <li><a href="add_voters.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Voters</a></li>
-                <li><a href="vote_result.php"><span class="glyphicon glyphicon-plus-sign"></span>Vote Result</a></li>
+                <li class="active"><a href="vote_result.php"><span class="glyphicon glyphicon-plus-sign"></span>Vote Result</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> <span class="caret"></span></a>
                     <ul class="dropdown-menu">
@@ -63,77 +66,99 @@ require("classes/Position.php");
 
 
 
-
+<?php
+$readOrg = new Organization();
+$rtnReadOrg = $readOrg->READ_ORG();
+?>
 <div class="container">
     <div class="row">
-        <div class="col-md-4">
-            <h4>Add Position</h4><hr>
-            <?php
-
-            if(isset($_POST['submit'])) {
-
-                $organization   = trim($_POST['organization']);
-                $pos            = trim($_POST['position']);
-
-                $insertPos = new Position();
-                $rtnInsertPos = $insertPos->INSERT_POS($organization, $pos);
-            }
-            ?>
-            <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>" role="form">
-                <?php
-                $readOrg = new Organization();
-                $rtnReadOrg = $readOrg->READ_ORG();
-                ?>
-                <div class="form-group-sm">
+        <?php if($rtnReadOrg) { ?>
+        <div class="col-md-3">
+            <h3>Select Organization</h3><hr>
+            <form action="<?php $_SERVER['PHP_SELF']; ?>" method="GET" role="form">
+                <div class="form-group">
                     <label for="organization">Organization</label>
-                    <?php if($rtnReadOrg) { ?>
-                    <select required name="organization" class="form-control">
+                    <select name="organization" class="form-control">
                         <option value="">*****Select Organization*****</option>
                         <?php while($rowOrg = $rtnReadOrg->fetch_assoc()) { ?>
                         <option value="<?php echo $rowOrg['org']; ?>"><?php echo $rowOrg['org']; ?></option>
                         <?php } //End while ?>
                     </select>
-                    <?php $rtnReadOrg->free(); ?>
-                    <?php } //End if ?>
                 </div>
-                <div class="form-group-sm">
-                    <label for="position">Position</label>
-                    <input required type="text" name="position" class="form-control">
-                </div><hr/>
-                <div class="form-group-sm">
-                    <input type="submit" name="submit" value="Submit" class="btn btn-info">
-                </div>
+                <button type="submit" name="submit" class="btn btn-info">Submit</button>
             </form>
         </div>
+            <?php $rtnReadOrg->free(); ?>
+        <?php } //End if ?>
 
-        <?php
-        $readPos = new Position();
-        $rtnReadPos = $readPos->READ_POS();
-        ?>
-        <div class="col-md-8">
-            <h4>List of Positions</h4><hr>
-            <div class="table-responsive">
+
+        <div class="col-md-9">
+            <?php
+            if(!isset($_GET['organization'])) {
+                echo "<div class='alert alert-warning'>Please select organization and click submit to show vote result.</div>";
+            } else {
+            $org = trim($_GET['organization']);
+            ?>
+                <a href="http://localhost/VotingSystem/admin/print_result.php?organization=<?php echo $org; ?>"><h3><span class="glyphicon glyphicon-print pull-right"></h3></span> </a>
+                <h4><?php echo $org; ?> Result</h4>
+                <hr>
+
+                <?php
+                $readPos = new Position();
+                $rtnReadPos = $readPos->READ_POS_BY_ORG($org);
+                ?>
+
                 <?php if($rtnReadPos) { ?>
-                <table class="table table-bordered table-condensed table-striped">
-                    <tr>
-                        <th>Organization</th>
-                        <th>Position</th>
-                        <th><span class="glyphicon glyphicon-edit"></span></th>
-                        <th><span class="glyphicon glyphicon-remove"></span></th>
-                    </tr>
+
                     <?php while($rowPos = $rtnReadPos->fetch_assoc()) { ?>
-                    <tr>
-                        <td><?php echo $rowPos['org']; ?></td>
-                        <td><?php echo $rowPos['pos']; ?></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/edit_pos.php?id=<?php echo $rowPos['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/delete_pos.php?id=<?php echo $rowPos['id']; ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
-                    </tr>
+                    <h5><?php echo $rowPos['pos']; ?></h5>
+
+                        <?php
+                        $readNomOrgPos = new Nominees();
+                        $rtnReadNomOrgPos = $readNomOrgPos->READ_NOM_BY_ORG_POS($org, $rowPos['pos']);
+                        ?>
+
+                        <div class="table-responsive">
+                            <?php if($rtnReadNomOrgPos) { ?>
+                            <table class="table table-condensed table-striped">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Votes</th>
+                                </tr>
+                                <?php while($rowCountVotes = $rtnReadNomOrgPos->fetch_assoc()) { ?>
+
+
+
+
+                                    <?php
+                                    $countVotes = new Nominees();
+                                    $rtnCountVotes = $countVotes->COUNT_VOTES($rowCountVotes['id'])
+                                    ?>
+                                    <tr>
+                                        <td style="width: 20%;"><?php echo $rowCountVotes['id']; ?></td>
+                                        <td style="width: 70%;"><?php echo $rowCountVotes['name']; ?></td>
+                                        <td style="width: 10%;"><?php echo $rtnCountVotes->num_rows; ?></td>
+                                    </tr>
+
+
+
+
+
+                                <?php } //End while ?>
+                            </table>
+                            <?php $rtnReadNomOrgPos->free(); } //End if ?>
+                        </div>
+
                     <?php } //End while ?>
-                </table>
-                    <?php $rtnReadPos->free(); ?>
-                <?php } //End if ?>
-            </div>
+
+                <?php $rtnReadPos->free(); } //End if ?>
+
+            <?php } //End if ?>
         </div>
+
+
+
     </div>
 </div>
 
@@ -147,7 +172,7 @@ require("classes/Position.php");
 
     <div class="container">
         <div class="navbar-text pull-left">
-            Copyright 2018 @ IFSU Potia Campus
+            Copyright 2017
         </div>
     </div>
 
@@ -159,8 +184,3 @@ require("classes/Position.php");
 
 </body>
 </html>
-
-
-<?php
-//Close database connection
-$db->close();

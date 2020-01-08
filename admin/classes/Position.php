@@ -14,32 +14,21 @@ class Position
         //Check to see if the position is already inserted
         $sql = "SELECT *
                 FROM positions
-                WHERE org = ?
-                AND pos = ?
+                WHERE org = '$org'
+                AND pos = '$pos'
                 LIMIT 1";
-        if(!$stmt = $db->prepare($sql)) {
-            echo $stmt->error;
-        } else {
-            $stmt->bind_param("ss", $org, $pos);
-            $stmt->execute();
-            $result = $stmt->get_result();
-        }
-        if($result->num_rows > 0) {
+
+        $result = $db->query($sql);
+
+        if ($result->fetchArray() > 0) {
             echo "<div class='alert alert-danger'>Sorry the position you entered is already inserted in the database.</div>";
         } else {
-            //Insert position in the database
-            $sql = "INSERT INTO positions(org, pos)VALUES(?, ?)";
-            if(!$stmt = $db->prepare($sql)) {
-                echo $stmt->error;
-            } else {
-                $stmt->bind_param("ss", $org, $pos);
-            }
-            if($stmt->execute()) {
+            $sql = "INSERT INTO position(org, pos) VALUES ($org, $pos)";
+
+            if ($db->query($sql)) {
                 echo "<div class='alert alert-success'>Position was inserted successfully.</div>";
             }
-            $stmt->free_result();
         }
-        return $stmt;
     }
 
     public function READ_POS() {
@@ -49,13 +38,16 @@ class Position
         $sql = "SELECT *
                 FROM positions
                 ORDER BY org ASC";
+
+        
+
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
             $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
-        $stmt->free_result();
+        $stmt->reset();
         return $result;
     }
 
@@ -93,7 +85,7 @@ class Position
         }
 
         if($stmt->execute()) {
-            echo "<div class='alert alert-success'>Position was updated successfully.<a href='http://localhost/VotingSystem/sandbox/add_pos.php'><span class='glyphicon glyphicon-backward'></span></a></div>";
+            echo "<div class='alert alert-success'>Position was updated successfully.<a href='http://localhost/VotingSystem/admin/add_pos.php'><span class='glyphicon glyphicon-backward'></span></a></div>";
         }
         $stmt->free_result();
         return $stmt;
@@ -112,7 +104,7 @@ class Position
         }
 
         if($stmt->execute()) {
-            header("location: http://localhost/VotingSystem/sandbox/add_pos.php");
+            header("location: http://localhost/VotingSystem/admin/add_pos.php");
             exit();
         }
         $stmt->free_result();

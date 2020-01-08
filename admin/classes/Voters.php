@@ -90,7 +90,7 @@ class Voters
         }
 
         if($stmt->execute()) {
-            echo "<div class='alert alert-success'>Voter was updated successfully.<a href='http://localhost/VotingSystem/sandbox/add_voters.php'><span class='glyphicon glyphicon-backward'></span></a></div>";
+            echo "<div class='alert alert-success'>Voter was updated successfully.<a href='http://localhost/VotingSystem/admin/add_voters.php'><span class='glyphicon glyphicon-backward'></span></a></div>";
         }
         $stmt->free_result();
         return $stmt;
@@ -108,7 +108,7 @@ class Voters
         }
 
         if($stmt->execute()) {
-            header("location: http://localhost/VotingSystem/sandbox/add_voters.php");
+            header("location: http://localhost/VotingSystem/admin/add_voters.php");
             exit();
         }
         $stmt->free_result();

@@ -87,7 +87,7 @@ require("classes/Nominees.php");
             if(isset($_GET['id'])) {
                 $nom_id = trim($_GET['id']);
 
-                echo "<div class='alert alert-danger'>Are you sure you want to delete selected nominee? <a href='http://localhost/VotingSystem/sandbox/delete_nominee.php?del_id=$nom_id'>Yes</a> | <a href='http://localhost/VotingSystem/sandbox/add_nominees.php'>No</a></div>";
+                echo "<div class='alert alert-danger'>Are you sure you want to delete selected nominee? <a href='http://localhost/VotingSystem/admin/delete_nominee.php?del_id=$nom_id'>Yes</a> | <a href='http://localhost/VotingSystem/admin/add_nominees.php'>No</a></div>";
             }
 
 

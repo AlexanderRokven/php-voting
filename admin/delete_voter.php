@@ -67,7 +67,7 @@ require("classes/Voters.php");
             if(isset($_GET['id'])) {
                 $voter_id = trim($_GET['id']);
 
-                echo "<div class='alert alert-danger'>Are you sure you want to delete selected voter? <a href='http://localhost/VotingSystem/sandbox/delete_voter.php?del_id=$voter_id'>Yes</a> | <a href='http://localhost/VotingSystem/sandbox/add_voters.php'>No</a></div>";
+                echo "<div class='alert alert-danger'>Are you sure you want to delete selected voter? <a href='http://localhost/VotingSystem/admin/delete_voter.php?del_id=$voter_id'>Yes</a> | <a href='http://localhost/VotingSystem/admin/add_voters.php'>No</a></div>";
             }
 
 

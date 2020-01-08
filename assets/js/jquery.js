@@ -64,7 +64,7 @@ var support = {};
 
 
 var
-	// Use the correct document accordingly with window argument (sandbox)
+	// Use the correct document accordingly with window argument (admin)
 	document = window.document,
 
 	version = "2.1.4",

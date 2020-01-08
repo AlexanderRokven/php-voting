@@ -6,8 +6,11 @@ require("process/auth.php");
 //Include database connection
 require("../config/db.php");
 
-//Include class Voters
-require("classes/Voters.php");
+//Include class Organization
+require("classes/Organization.php");
+
+//Include class Position
+require("classes/Position.php");
 
 ?>
 <!DOCTYPE HTML>
@@ -40,9 +43,9 @@ require("classes/Voters.php");
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="admin_page.php"><span class="glyphicon glyphicon-home"></span></a></li>
                 <li><a href="add_org.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Organization</a></li>
-                <li><a href="add_pos.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Position</a></li>
+                <li class="active"><a href="add_pos.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Position</a></li>
                 <li><a href="add_nominees.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Nominees</a></li>
-                <li class="active"><a href="add_voters.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Voters</a></li>
+                <li><a href="add_voters.php"><span class="glyphicon glyphicon-plus-sign"></span>Add Voters</a></li>
                 <li><a href="vote_result.php"><span class="glyphicon glyphicon-plus-sign"></span>Vote Result</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> <span class="caret"></span></a>
@@ -60,57 +63,43 @@ require("classes/Voters.php");
 
 
 
+
 <div class="container">
     <div class="row">
         <div class="col-md-4">
+            <h4>Add Position</h4><hr>
             <?php
-            if(isset($_POST['submit'])) {
-                $name       = trim($_POST['name']);
-                $course     = trim($_POST['course']);
-                $year       = trim($_POST['year']);
-                $stud_id    = trim($_POST['stud_id']);
 
-                $insertVoter = new Voters();
-                $rtnInsertVoter = $insertVoter->INSERT_VOTER($name, $course, $year, $stud_id);
+            if(isset($_POST['submit'])) {
+
+                $organization   = trim($_POST['organization']);
+                $pos            = trim($_POST['position']);
+
+                $insertPos = new Position();
+                $rtnInsertPos = $insertPos->INSERT_POS($organization, $pos);
             }
             ?>
-            <h4>Add Voters</h4><hr>
             <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>" role="form">
+                <?php
+                $readOrg = new Organization();
+                $rtnReadOrg = $readOrg->READ_ORG();
+                ?>
                 <div class="form-group-sm">
-                    <label for="name">Name</label>
-                    <input required type="text" name="name" class="form-control" placeholder="LName, FName MI.">
-                </div>
-                <div class="form-group-sm">
-                    <label for="course">Course</label>
-                    <select required name="course" class="form-control">
-                        <option value="">*****Select Course*****</option>
-                        <option value="BSIT">BSIT</option>
-                        <option value="COE">COE</option>
-                        <option value="BEE">BEE</option>
-                        <option value="BSE">BSE</option>
-                        <option value="BSA">BSA</option>
-                        <option value="BSF">BSF</option>
-                        <option value="BHRM">BHRM</option>
-                        <option value="BSHT">BSHT</option>
-                        <option value="CRIMINOLOGY">CRIMINOLOGY</option>
-                        <option value="MIDWIFERY">MIDWIFERY</option>
+                    <label for="organization">Organization</label>
+                    <?php if($rtnReadOrg) { ?>
+                    <select required name="organization" class="form-control">
+                        <option value="">*****Select Organization*****</option>
+                        <?php while($rowOrg = $rtnReadOrg->fetchArray()) { ?>
+                        <option value="<?php echo $rowOrg['org']; ?>"><?php echo $rowOrg['org']; ?></option>
+                        <?php } //End while ?>
                     </select>
+                    <?php $rtnReadOrg->reset(); ?>
+                    <?php } //End if ?>
                 </div>
                 <div class="form-group-sm">
-                    <label for="year">Year</label>
-                    <select required name="year" class="form-control">
-                        <option value="">*****Select Year*****</option>
-                        <option value="I">I</option>
-                        <option value="II">II</option>
-                        <option value="III">III</option>
-                        <option value="IV">IV</option>
-                        <option value="V">V</option>
-                    </select>
-                </div>
-                <div class="form-group-sm">
-                    <label for="stud_id">Student ID No.</label>
-                    <input required type="text" name="stud_id" class="form-control">
-                </div><hr>
+                    <label for="position">Position</label>
+                    <input required type="text" name="position" class="form-control">
+                </div><hr/>
                 <div class="form-group-sm">
                     <input type="submit" name="submit" value="Submit" class="btn btn-info">
                 </div>
@@ -118,32 +107,30 @@ require("classes/Voters.php");
         </div>
 
         <?php
-        $readVoters = new Voters();
-        $rtnReadVoters = $readVoters->READ_VOTERS();
+        $readPos = new Position();
+        $rtnReadPos = $readPos->READ_POS();
         ?>
         <div class="col-md-8">
-            <h4>List of Organizations</h4><hr>
+            <h4>List of Positions</h4><hr>
             <div class="table-responsive">
-                <?php if($rtnReadVoters) { ?>
+                <?php if($rtnReadPos) { ?>
                 <table class="table table-bordered table-condensed table-striped">
                     <tr>
-                        <th>Name</th>
-                        <th>Course/Year</th>
-                        <th>Student ID</th>
+                        <th>Organization</th>
+                        <th>Position</th>
                         <th><span class="glyphicon glyphicon-edit"></span></th>
                         <th><span class="glyphicon glyphicon-remove"></span></th>
                     </tr>
-                    <?php while($rowVoter = $rtnReadVoters->fetch_assoc()) { ?>
+                    <?php while($rowPos = $rtnReadPos->fetchArray()) { ?>
                     <tr>
-                        <td><?php echo $rowVoter['name']; ?></td>
-                        <td><?php echo $rowVoter['course'] . "-" . $rowVoter['year']; ?></td>
-                        <td><?php echo $rowVoter['stud_id']; ?></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/edit_voter.php?id=<?php echo $rowVoter['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a></td>
-                        <td><a href="http://localhost/VotingSystem/sandbox/delete_voter.php?id=<?php echo $rowVoter['id']; ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
+                        <td><?php echo $rowPos['org']; ?></td>
+                        <td><?php echo $rowPos['pos']; ?></td>
+                        <td><a href="http://localhost/VotingSystem/admin/edit_pos.php?id=<?php echo $rowPos['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a></td>
+                        <td><a href="http://localhost/VotingSystem/admin/delete_pos.php?id=<?php echo $rowPos['id']; ?>"><span class="glyphicon glyphicon-remove"></span></a></td>
                     </tr>
                     <?php } //End while ?>
                 </table>
-                    <?php $rtnReadVoters->free(); ?>
+                    <?php $rtnReadPos->reset(); ?>
                 <?php } //End if ?>
             </div>
         </div>
@@ -172,3 +159,8 @@ require("classes/Voters.php");
 
 </body>
 </html>
+
+
+<?php
+//Close database connection
+$db->close();
