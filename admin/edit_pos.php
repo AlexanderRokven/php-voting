@@ -90,7 +90,7 @@ require("classes/Position.php");
 
                 <?php if($rtnEditPos) { ?>
                 <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>" role="form">
-                    <?php while($rowEditPos = $rtnEditPos->fetch_assoc()) { ?>
+                    <?php while($rowEditPos = $rtnEditPos->fetchArray()) { ?>
                     <div class="form-group-sm">
                         <label for="organization">Organization</label>
 
@@ -105,11 +105,11 @@ require("classes/Position.php");
 
                                 <?php if($rtnReadOrg) { ?>
 
-                                    <?php while($rowOrg = $rtnReadOrg->fetch_assoc()) { ?>
+                                    <?php while($rowOrg = $rtnReadOrg->fetchArray()) { ?>
                                         <option value="<?php echo $rowOrg['org']; ?>"><?php echo $rowOrg['org']; ?></option>
                                     <?php } //End while ?>
 
-                                <?php $rtnReadOrg->free(); ?>
+                                <?php $rtnReadOrg->reset(); ?>
                                 <?php } //End if ?>
                             </select>
 
@@ -124,7 +124,7 @@ require("classes/Position.php");
                     </div>
                     <?php } //End while ?>
                 </form>
-                <?php $rtnEditPos->free(); ?>
+                <?php $rtnEditPos->reset(); ?>
                 <?php } //End if ?>
             </div>
 
