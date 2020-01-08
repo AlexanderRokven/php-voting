@@ -80,7 +80,7 @@ $rtnReadOrg = $readOrg->READ_ORG();
                     <label for="organization">Organization</label>
                     <select name="organization" class="form-control">
                         <option value="">*****Select Organization*****</option>
-                        <?php while($rowOrg = $rtnReadOrg->fetch_assoc()) { ?>
+                        <?php while($rowOrg = $rtnReadOrg->fetchArray()) { ?>
                         <option value="<?php echo $rowOrg['org']; ?>"><?php echo $rowOrg['org']; ?></option>
                         <?php } //End while ?>
                     </select>
@@ -88,7 +88,7 @@ $rtnReadOrg = $readOrg->READ_ORG();
                 <button type="submit" name="submit" class="btn btn-info">Submit</button>
             </form>
         </div>
-            <?php $rtnReadOrg->free(); ?>
+            <?php $rtnReadOrg->reset(); ?>
         <?php } //End if ?>
 
 
@@ -110,7 +110,7 @@ $rtnReadOrg = $readOrg->READ_ORG();
 
                 <?php if($rtnReadPos) { ?>
 
-                    <?php while($rowPos = $rtnReadPos->fetch_assoc()) { ?>
+                    <?php while($rowPos = $rtnReadPos->fetchArray()) { ?>
                     <h5><?php echo $rowPos['pos']; ?></h5>
 
                         <?php
@@ -126,7 +126,7 @@ $rtnReadOrg = $readOrg->READ_ORG();
                                     <th>Name</th>
                                     <th>Votes</th>
                                 </tr>
-                                <?php while($rowCountVotes = $rtnReadNomOrgPos->fetch_assoc()) { ?>
+                                <?php while($rowCountVotes = $rtnReadNomOrgPos->fetchArray()) { ?>
 
 
 
@@ -138,7 +138,7 @@ $rtnReadOrg = $readOrg->READ_ORG();
                                     <tr>
                                         <td style="width: 20%;"><?php echo $rowCountVotes['id']; ?></td>
                                         <td style="width: 70%;"><?php echo $rowCountVotes['name']; ?></td>
-                                        <td style="width: 10%;"><?php echo $rtnCountVotes->num_rows; ?></td>
+                                        <td style="width: 10%;"><?php echo $rtnCountVotes->fetchArray(); ?></td>
                                     </tr>
 
 
@@ -147,12 +147,12 @@ $rtnReadOrg = $readOrg->READ_ORG();
 
                                 <?php } //End while ?>
                             </table>
-                            <?php $rtnReadNomOrgPos->free(); } //End if ?>
+                            <?php $rtnReadNomOrgPos->reset(); } //End if ?>
                         </div>
 
                     <?php } //End while ?>
 
-                <?php $rtnReadPos->free(); } //End if ?>
+                <?php $rtnReadPos->reset(); } //End if ?>
 
             <?php } //End if ?>
         </div>

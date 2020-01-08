@@ -81,7 +81,7 @@ require("classes/Nominees.php");
 
                 <?php if($rtnReadPos) { ?>
 
-                    <?php while($rowPos = $rtnReadPos->fetch_assoc()) { ?>
+                    <?php while($rowPos = $rtnReadPos->fetchArray()) { ?>
                         <h5><?php echo $rowPos['pos']; ?></h5>
 
                         <?php
@@ -97,7 +97,7 @@ require("classes/Nominees.php");
                                         <th>Name</th>
                                         <th>Votes</th>
                                     </tr>
-                                    <?php while($rowCountVotes = $rtnReadNomOrgPos->fetch_assoc()) { ?>
+                                    <?php while($rowCountVotes = $rtnReadNomOrgPos->fetchArray()) { ?>
 
 
 
@@ -118,12 +118,12 @@ require("classes/Nominees.php");
 
                                     <?php } //End while ?>
                                 </table>
-                                <?php $rtnReadNomOrgPos->free(); } //End if ?>
+                                <?php $rtnReadNomOrgPos->reset(); } //End if ?>
                         </div>
 
                     <?php } //End while ?>
 
-                    <?php $rtnReadPos->free(); } //End if ?>
+                    <?php $rtnReadPos->reset(); } //End if ?>
 
             <?php } //End if ?>
         </div>

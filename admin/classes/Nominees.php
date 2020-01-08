@@ -116,7 +116,8 @@ class Nominees
         $sql = "SELECT *
                 FROM nominees
                 WHERE nominees.org = '$org'
-                AND nominees.pos = '$pos";
+                AND nominees.pos = '$pos'";
+        echo $sql;
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
