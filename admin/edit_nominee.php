@@ -110,7 +110,7 @@ require("classes/Nominees.php");
             ?>
 
             <?php if($rtnEditNominee) { ?>
-                <?php while($rowNominee = $rtnEditNominee->fetch_assoc()) { ?>
+                <?php while($rowNominee = $rtnEditNominee->fetchArray()) { ?>
                 <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>" role="form">
                     <?php
                     $readOrg = new Organization();
@@ -121,11 +121,11 @@ require("classes/Nominees.php");
                         <?php if($rtnReadOrg) { ?>
                             <select required name="organization" class="form-control" id="org-list" onchange="getPos(this.value);">
                                 <option value="<?php echo $rowNominee['org']; ?>"><?php echo $rowNominee['org']; ?></option>
-                                <?php while($rowOrg = $rtnReadOrg->fetch_assoc()) { ?>
+                                <?php while($rowOrg = $rtnReadOrg->fetchArray()) { ?>
                                     <option value="<?php echo $rowOrg['org']; ?>"><?php echo $rowOrg['org']; ?></option>
                                 <?php } //End while ?>
                             </select>
-                            <?php $rtnReadOrg->free(); ?>
+                            <?php $rtnReadOrg->reset(); ?>
                         <?php } //End if ?>
                     </div>
                     <div class="form-group-sm">
@@ -176,7 +176,7 @@ require("classes/Nominees.php");
                     </div>
                 </form>
                 <?php } //End while ?>
-                <?php $rtnEditNominee->free(); ?>
+                <?php $rtnEditNominee->reset(); ?>
             <?php } //End if ?>
         </div>
     </div>

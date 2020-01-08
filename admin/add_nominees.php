@@ -107,18 +107,24 @@ require("classes/Nominees.php");
                     <?php if($rtnReadOrg) { ?>
                         <select required name="organization" class="form-control" id="org-list" onchange="getPos(this.value);">
                             <option value="">*****Select Organization*****</option>
-                            <?php while($rowOrg = $rtnReadOrg->fetch_assoc()) { ?>
-                                <option value="<?php echo $rowOrg['org']; ?>"><?php echo $rowOrg['org']; ?></option>
+                            <?php while($rowOrg = $rtnReadOrg->fetchArray()) { ?>
+                                <option value="<?php echo $rowOrg['org']; ?>">
+                                    <?php 
+                                    $selectedOrg = $rowOrg['org'];
+                                    echo $selectedOrg; 
+                                    ?>
+                                        
+                                    </option>
                             <?php } //End while ?>
                         </select>
-                        <?php $rtnReadOrg->free(); ?>
+                        <?php $rtnReadOrg->reset(); ?>
                     <?php } //End if ?>
                 </div>
                 <div class="form-group-sm">
                     <label for="position">Position</label>
-                    <select required name="position" class="form-control" id="pos-list">
-                        <option value="">*****Select Position*****</option>
-                    </select>
+                        <select required name="position" class="form-control" id="pos-list">
+                            <option value="">*****Select Position*****</option>
+                        </select>
                 </div>
                 <div class="form-group-sm">
                     <label for="name">Name</label>
@@ -180,7 +186,7 @@ require("classes/Nominees.php");
                         <th><span class="glyphicon glyphicon-edit"></span></th>
                         <th><span class="glyphicon glyphicon-remove"></span></th>
                     </tr>
-                    <?php while($rowNom = $rtnReadNominees->fetch_assoc()) { ?>
+                    <?php while($rowNom = $rtnReadNominees->fetchArray()) { ?>
                     <tr>
                         <td><?php echo $rowNom['org']; ?></td>
                         <td><?php echo $rowNom['pos']; ?></td>
@@ -192,7 +198,7 @@ require("classes/Nominees.php");
                     </tr>
                     <?php } //End while ?>
                 </table>
-                    <?php $rtnReadNominees->free(); ?>
+                    <?php $rtnReadNominees->reset(); ?>
                 <?php } //end if ?>
             </div>
         </div>

@@ -113,15 +113,13 @@ class Position
 
         $sql = "SELECT *
                 FROM position
-                WHERE org = ?";
+                WHERE org = '$org'";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("s", $org);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
-        $stmt->free_result();
+        $result->reset();
         return $result;
     }
 }

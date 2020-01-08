@@ -15,30 +15,30 @@ class Nominees
         //Check to see if the nominee already exists in the database.
         $sql = "SELECT *
                 FROM nominees
-                WHERE name = ?
+                WHERE name = '$name'
                 LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("s", $name);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
 
-        if($result->num_rows > 0) {
+        if($result->fetchArray() > 0) {
             echo "<div class='alert alert-danger'>Sorry the nominee you entered already exist in the database</div>";
         } else {
             //Insert nominee
-            $sql = "INSERT INTO nominees(org, pos, name, course, year, stud_id)VALUES(?, ?, ?, ?, ?, ?)";
+            $sql = "INSERT INTO nominees(
+                    org, pos, name, course, year, stud_id)
+                    VALUES
+                    ('$org','$pos','$name','$course','$year','$stud_id')";
             if(!$stmt = $db->prepare($sql)) {
                 echo $stmt->error;
-            } else {
-                $stmt->bind_param("ssssss", $org, $pos, $name, $course, $year, $stud_id);
-            }
-            if($stmt->execute()) {
+            } 
+
+            if($db->query($sql)) {
                 echo "<div class='alert alert-success'>Nominee was inserted successfully.</div>";
             }
-            $stmt->free_result();
+            $stmt->reset();
         }
         return $stmt;
     }
@@ -52,10 +52,9 @@ class Nominees
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
-        $stmt->free_result();
+        $result->reset();
         return $result;
     }
 
@@ -64,16 +63,14 @@ class Nominees
 
         $sql = "SELECT *
                 FROM nominees
-                WHERE id = ?
+                WHERE id = '$nom_id'
                 LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("i", $nom_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
-        $stmt->free_result();
+        $result->reset();
         return $result;
     }
 
@@ -81,17 +78,16 @@ class Nominees
         global $db;
 
         $sql = "UPDATE nominees
-                SET org = ?, pos = ?, name = ?, course = ?, year = ?, stud_id = ?
-                WHERE id = ? LIMIT 1";
+                SET org = '$org', pos = '$pos', name = '$name', course = '$course', year = '$year', stud_id = '$stud_id'
+                WHERE id = '$nom_id' LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
-        } else {
-            $stmt->bind_param("ssssssi", $org, $pos, $name, $course, $year, $stud_id, $nom_id);
-        }
-        if($stmt->execute()) {
+        } 
+
+        if($db->query($sql)) {
             echo "<div class='alert alert-success'>Update successful <a href='http://localhost/VotingSystem/admin/add_nominees.php'><span class='glyphicon glyphicon-backward'></span> </a></div>";
         }
-        $stmt->free_result();
+        $stmt->reset();
         return $stmt;
     }
 
@@ -99,19 +95,19 @@ class Nominees
         global $db;
 
         $sql = "DELETE FROM nominees
-                WHERE id = ?
+                WHERE id = $nom_id
                 LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("i", $nom_id);
+            $result = $db->query($sql);
         }
-        if($stmt->execute()) {
+        if($result) {
             header("location: http://localhost/VotingSystem/admin/add_nominees.php");
             exit();
         }
-        $stmt->free_result();
-        return $stmt;
+        $result->reset();
+        return $result;
     }
 
     public function READ_NOM_BY_ORG_POS($org, $pos) {
@@ -119,16 +115,14 @@ class Nominees
 
         $sql = "SELECT *
                 FROM nominees
-                WHERE nominees.org = ?
-                AND nominees.pos = ?";
+                WHERE nominees.org = '$org'
+                AND nominees.pos = '$pos";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("ss", $org, $pos);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
-        $stmt->free_result();
+        $result->reset();
         return $result;
     }
 
@@ -137,15 +131,13 @@ class Nominees
 
         $sql = "SELECT candidate_id
                 FROM votes
-                WHERE candidate_id = ?";
+                WHERE candidate_id = $candidate_id";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("i", $candidate_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
-        $stmt->free_result();
+        $result->reset();
         return $result;
     }
 }
