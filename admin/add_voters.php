@@ -133,7 +133,7 @@ require("classes/Voters.php");
                         <th><span class="glyphicon glyphicon-edit"></span></th>
                         <th><span class="glyphicon glyphicon-remove"></span></th>
                     </tr>
-                    <?php while($rowVoter = $rtnReadVoters->fetch_assoc()) { ?>
+                    <?php while($rowVoter = $rtnReadVoters->fetchArray()) { ?>
                     <tr>
                         <td><?php echo $rowVoter['name']; ?></td>
                         <td><?php echo $rowVoter['course'] . "-" . $rowVoter['year']; ?></td>
@@ -143,7 +143,7 @@ require("classes/Voters.php");
                     </tr>
                     <?php } //End while ?>
                 </table>
-                    <?php $rtnReadVoters->free(); ?>
+                    <?php $rtnReadVoters->reset(); ?>
                 <?php } //End if ?>
             </div>
         </div>

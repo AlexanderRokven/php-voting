@@ -88,7 +88,7 @@ require("classes/Voters.php");
 
             <?php if($rtnEditVoter) { ?>
             <form method="POST" action="<?php $_SERVER['PHP_SELF']; ?>" role="form">
-                <?php while($rowVoter = $rtnEditVoter->fetch_assoc()) { ?>
+                <?php while($rowVoter = $rtnEditVoter->fetchArray()) { ?>
                 <div class="form-group-sm">
                     <label for="name">Name</label>
                     <input required type="text" name="name" class="form-control" placeholder="LName, FName MI." value="<?php echo $rowVoter['name']; ?>">
@@ -130,7 +130,7 @@ require("classes/Voters.php");
                 </div>
                 <?php } //End while ?>
             </form>
-                <?php $rtnEditVoter->free(); ?>
+                <?php $rtnEditVoter->reset(); ?>
             <?php } //End if ?>
         </div>
     </div>

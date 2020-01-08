@@ -15,32 +15,29 @@ class Voters
         //Check to see if the voter exists
         $sql = "SELECT *
                 FROM voters
-                WHERE name = ?
+                WHERE name = '$name'
                 LIMIT 1";
-        if(!$stmt = $db->prepare($sql)) {
-            echo $stmt->error;
+        if(!$result = $db->prepare($sql)) {
+            echo $result->error;
         } else {
-            $stmt->bind_param("s", $name);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
 
-        if($result->num_rows > 0) {
+        if($result->fetchArray() > 0) {
             echo "<div class='alert alert-danger'>Sorry the voter you entered already exists in the database.</div>";
         } else {
             //Insert voter
-            $sql = "INSERT INTO voters(name, course, year, stud_id)VALUES(?, ?, ?, ?)";
-            if(!$stmt = $db->prepare($sql)) {
-                echo $stmt->error;
-            } else {
-                $stmt->bind_param("ssss", $name, $course, $year, $stud_id);
-            }
-            if($stmt->execute()) {
+            $sql = "INSERT INTO voters(name, course, year, stud_id)VALUES('$name', '$course', '$year', '$stud_id')";
+            if(!$result = $db->prepare($sql)) {
+                echo $result->error;
+            } 
+
+            if($db->query($sql)) {
                 echo "<div class='alert alert-success'>Voter was inserted successfully.</div>";
             }
-            $stmt->free_result();
+            $result->reset();
         }
-        return $stmt;
+        return $result;
     }
 
     public function READ_VOTERS() {
@@ -52,10 +49,9 @@ class Voters
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
-        $stmt->free_result();
+        $result->reset();
         return $result;
     }
 
@@ -64,16 +60,14 @@ class Voters
 
         $sql = "SELECT *
                 FROM voters
-                WHERE id = ?
+                WHERE id = '$voter_id'
                 LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("i", $voter_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
+            $result = $db->query($sql);
         }
-        $stmt->free_result();
+        $result->reset();
         return $result;
     }
 
@@ -81,18 +75,18 @@ class Voters
         global $db;
 
         $sql = "UPDATE voters
-                SET name = ?, course = ?, year = ?, stud_id = ?
-                WHERE id = ? LIMIT 1";
+                SET name = '$name', course = '$course', year = '$year', stud_id = '$stud_id'
+                WHERE id = '$voter_id' LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
-        } else {
-            $stmt->bind_param("ssssi", $name, $course, $year, $stud_id, $voter_id);
         }
 
-        if($stmt->execute()) {
+        if($db->query($sql)) {
             echo "<div class='alert alert-success'>Voter was updated successfully.<a href='http://localhost/VotingSystem/admin/add_voters.php'><span class='glyphicon glyphicon-backward'></span></a></div>";
+            header("location: http://localhost/VotingSystem/admin/add_voters.php");
+            exit();
         }
-        $stmt->free_result();
+        $stmt->reset();
         return $stmt;
     }
 
@@ -100,18 +94,18 @@ class Voters
         global $db;
 
         $sql = "DELETE FROM voters
-                WHERE id = ? LIMIT 1";
+                WHERE id = '$voter_id' LIMIT 1";
         if(!$stmt = $db->prepare($sql)) {
             echo $stmt->error;
         } else {
-            $stmt->bind_param("i", $voter_id);
+            $result = $db->query($sql);
         }
 
-        if($stmt->execute()) {
+        if($result) {
             header("location: http://localhost/VotingSystem/admin/add_voters.php");
             exit();
         }
-        $stmt->free_result();
-        return $stmt;
+        $result->reset();
+        return $result;
     }
 }
